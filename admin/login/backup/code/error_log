@@ -1,0 +1,2 @@
+[21-Jan-2016 04:51:16 UTC] PHP Fatal error:  Call to a member function prepare() on a non-object in /home/nswad1/public_html/admin/login/code/ajaxlogin.php on line 11
+[21-Jan-2016 06:18:05 UTC] PHP Fatal error:  Call to a member function prepare() on a non-object in /home/nswad1/public_html/admin/login/code/ajaxlogin.php on line 11

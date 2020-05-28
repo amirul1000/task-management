@@ -1,0 +1,291 @@
+<style>
+	  .btn + .btn {
+	   margin-left: 0px; 
+	}
+	
+	.btn-block+.btn-block {
+	     margin-top: 1px; 
+	}
+</style>
+<div class="page-sidebar-wrapper">
+		<div class="page-sidebar navbar-collapse collapse">
+			<!-- BEGIN SIDEBAR MENU -->
+			<!-- DOC: Apply "page-sidebar-menu-light" class right after "page-sidebar-menu" to enable light sidebar menu style(without borders) -->
+			<!-- DOC: Apply "page-sidebar-menu-hover-submenu" class right after "page-sidebar-menu" to enable hoverable(hover vs accordion) sub menu mode -->
+			<!-- DOC: Apply "page-sidebar-menu-closed" class right after "page-sidebar-menu" to collapse("page-sidebar-closed" class must be applied to the body element) the sidebar sub menu mode -->
+			<!-- DOC: Set data-auto-scroll="false" to disable the sidebar from auto scrolling/focusing -->
+			<!-- DOC: Set data-keep-expand="true" to keep the submenues expanded -->
+			<!-- DOC: Set data-auto-speed="200" to adjust the sub menu slide up/down speed -->
+			<?php
+			  $b_name_file = basename($_SERVER['SCRIPT_FILENAME']);
+			  $b_name_arr  = explode(".",$b_name_file);
+			  $b_name      = $b_name_arr[0];
+			?>
+            <ul class="page-sidebar-menu" data-keep-expanded="false" data-auto-scroll="true" data-slide-speed="200">
+				<!-- DOC: To remove the sidebar toggler from the sidebar you just need to completely remove the below "sidebar-toggler-wrapper" LI element -->
+				<li class="sidebar-toggler-wrapper">
+					<!-- BEGIN SIDEBAR TOGGLER BUTTON -->
+					<div class="sidebar-toggler">
+					</div>
+					<!-- END SIDEBAR TOGGLER BUTTON -->
+				</li>
+				
+              
+            <li class="start">
+					<a href="home">
+					<i class="icon-home"></i>
+					<span class="title">Home</span>
+					</a>
+				</li>
+              
+				<li class="start active open">
+					<a href="javascript:;">
+					<i class="fa fa-cogs"></i>
+					<span class="title">Menu</span>
+					<span class="selected"></span>
+					<span class="arrow open"></span>
+					</a>					
+				</li>
+				
+				<li  <?php if(
+				               $b_name=="change_profile" ||
+							     $b_name=="change_password" 
+							   ) { ?> class="active open" <?php } ?>>   
+					<a href="javascript:;">
+					<i class="icon-rocket"></i>
+					<span class="title">My Info</span>
+					<span class="arrow "></span>
+					</a>
+					<ul class="sub-menu">
+					         <li <?php if($b_name=="change_profile") { echo 'class="active"'; } ?>><a href="change_profile">Change Profile</a></li>
+                        <li <?php if($b_name=="change_password") { echo 'class="active"'; } ?>><a href="change_password">Change password</a></li>
+              </ul>          
+				</li>
+				
+				
+				
+				
+				
+				<?php
+				   if( $_SESSION["user_type"] == 'employer')
+				   {
+				?>	
+				<li  class="active open">   
+					<a href="javascript:;">
+					<i class="icon-rocket"></i>
+					<span class="title">Company</span>
+					<span class="arrow open"></span>
+					</a>
+					<ul class="sub-menu">
+				<?php
+				       unset($info);
+						$info["table"] = "company";
+						$info["fields"] = array("company.*"); 
+						$info["where"]   = "1  AND users_id='".$_SESSION['users_id']."'  ORDER BY id DESC";
+						$arr =  $db->select($info);
+						for($i=0;$i<count($arr);$i++)
+						{
+				 ?>
+				   <li>
+                      <div class="portlet-body util-btn-margin-bottom-5;"> 
+                       <div class="clearfix">									
+									<input type="button" onClick="location='task?cmd=list&company_id=<?php echo $arr[$i]['id'];?>'" class="btn purple btn-block" value="<?php echo $arr[$i]['company_name'];?>">
+								</div>
+							 </div>
+                       
+				   </li>			
+				<?php
+				     }
+				?>   
+				 </ul>          
+				</li>	
+				
+				
+            <li>
+					<a href="company?cmd=list">
+					<i class="icon-puzzle"></i>
+					<span class="title">Add a Company</span>
+					</a>
+				</li>         
+				<li  <?php if(
+				               $b_name=="company_report_date_range" ||
+							     $b_name=="company_report" 
+							   ) { ?> class="active open" <?php } ?>>   
+					<a href="javascript:;">
+					<i class="icon-rocket"></i>
+					<span class="title">Report</span>
+					<span class="arrow "></span>
+					</a>
+					<ul class="sub-menu">
+                        <li <?php if($b_name=="company_report_date_range") { echo 'class="active"'; } ?>><a href="company_report_date_range">Company Report(Date Range)</a></li>
+                        <li <?php if($b_name=="company_report") { echo 'class="active"'; } ?>><a href="company_report">Company Report</a></li>                        
+              </ul>          
+				</li>				
+				<?php
+				  }
+				?>
+				
+				
+				<?php
+				   if( $_SESSION["user_type"] == 'employee')
+				   {
+				?>	            
+				<li  <?php if(
+				               $b_name=="employee_register" ||
+							      $b_name=="employee_unregister" 
+							   ) { ?> class="active open" <?php } ?>>   
+					<a href="javascript:;">
+					<i class="icon-rocket"></i>
+					<span class="title">Company Registration</span>
+					<span class="arrow "></span>
+					</a>
+					<ul class="sub-menu">
+                        <li <?php if($b_name=="employee_register") { echo 'class="active"'; } ?>><a href="employee_register">Register</a></li>
+                        <li <?php if($b_name=="employee_unregister") { echo 'class="active"'; } ?>><a href="employee_unregister">Unregister</a></li>                        
+              </ul>          
+				</li>	
+				
+				<li  class="active open">   
+					<a href="javascript:;">
+					<i class="icon-rocket"></i>
+					<span class="title">Task</span>
+					<span class="arrow open"></span>
+					</a>
+					<ul class="sub-menu">
+				<?php
+									     
+						   unset($info);
+							unset($data);
+					     $info["table"] = "company_register";
+						  $info["fields"] = array("company_register.*"); 
+						  $info["where"]   = "1  AND users_id='".$_SESSION['users_id']."' AND register_status='register'";
+						  $arr =  $db->select($info);
+						  for($i=0;$i<count($arr);$i++)
+						  {
+						    $company_id[] = $arr[$i]['company_id'];
+						  }
+						  
+					     if(count($company_id)>0)
+						  {
+							   $list = implode(",", $company_id);
+						 
+								  unset($info);
+								  unset($data);
+								$info["table"] = "task";
+								$info["fields"] = array("task.*"); 
+								$info["where"]   = "1  AND status='active' AND company_id in($list)";
+								$arr =  $db->select($info);
+								
+								$arr_modal = $arr;
+						  }
+						for($i=0;$i<count($arr);$i++)
+						{
+				 ?>
+				   <li>
+                      <div class="portlet-body util-btn-margin-bottom-5;"> 
+                       <div class="clearfix">
+									<a href="javascript:;" class="btn default btn-block">
+								  	   <b><?php echo $arr[$i]['task_name'];?></b> 
+									</a>									
+									<a class="btn blue btn-block" href="#form_modal_<?=$i?>" data-toggle="modal">
+											Add a Task <i class="fa fa-share"></i>
+									</a>
+									<input type="button" onClick="location='employee_task_performed?cmd=list&task_id=<?php echo $arr[$i]['id'];?>'" class="btn purple btn-block" value="Manage">
+								</div>
+							 </div>
+							 <br>
+                       
+				   </li>			
+				<?php
+				     }
+				?>   
+				 </ul>          
+				</li>	
+				
+				<li>
+					<a href="employee_task?cmd=list">
+					<i class="icon-puzzle"></i>
+					<span class="title">Edit Task</span>
+					</a>
+				</li>   	
+				
+				<li>
+					<a href="employee_report?cmd=list">
+					<i class="icon-puzzle"></i>
+					<span class="title">Report</span>
+					</a>
+				</li>         			
+				<?php
+				  }
+				?>
+				
+				
+                 
+			</ul>
+			<!-- END SIDEBAR MENU -->
+           
+           <!--------  Employee Popup  ------------>
+           <?php
+            for($i=0;$i<count($arr_modal);$i++)
+						{
+			  ?>			   
+            <div id="form_modal_<?=$i?>" class="modal fade" role="dialog" aria-labelledby="myModalLabel10" aria-hidden="true">
+								<div class="modal-dialog">
+									<div class="modal-content">
+										<div class="modal-header">
+											<button type="button" class="close" data-dismiss="modal" aria-hidden="true"></button>
+											<center>											
+										   	<h4 class="modal-title"> <b><?php echo $arr_modal[$i]['task_name'];?></b> </h4>
+											</center>
+										</div>
+										<div class="modal-body">
+											<table class="table"> 
+											 <tr>
+											  <td>  
+												 <form name="frm_task_performed" method="post"  action="employee_task_performed"  enctype="multipart/form-data" onSubmit="return checkRequired();">			
+													<div class="portlet-body">
+														<table class="table"> 
+											            <tr>
+											             <td>Date</td>
+											             <td>
+											                <input type="text" name="date_time" id="date_time"  value="<?=date("Y-m-d");?>" class="datepicker">
+											             </td>
+											            </tr><tr>
+											             <td valign="top">Description</td>
+											             <td>
+											                <textarea name="description" id="description"  class="textbox" style="width:200px;height:100px;"><?=$description?></textarea>
+											             </td>
+											            </tr><tr>
+											             <td>No of units completed</td>
+											             <td>
+											                <input type="number" name="no_of_units_completed" id="no_of_units_completed"  value="<?=$no_of_units_completed?>" class="textbox">
+											             </td>
+											            </tr>
+											            <tr> 
+											             <td align="right"></td>
+											             <td>
+											                <input type="hidden" name="cmd" value="add">
+											                <input type="hidden" name="task_id" value="<?=$arr_modal[$i]['id']?>">			
+											                <input type="submit" name="btn_submit" id="btn_submit" value="submit" class="button_blue">
+											             </td>     
+											            </tr>
+													</table>
+													</div>
+											</form>
+											  </td>
+											 </tr>
+											</table>
+										</div>
+										<div class="modal-footer">
+											<button class="btn default" data-dismiss="modal" aria-hidden="true">Close</button>											
+										</div>
+									</div>
+								</div>
+				</div>				
+           <!---------  ---------->		
+           <?php
+             }
+           ?>	
+			
+		</div>
+	</div>
